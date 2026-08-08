@@ -1,0 +1,4 @@
+interface:
+  display_name: "Content Rule Starters"
+  short_description: "Turn exact content guidance into tested checks"
+  default_prompt: "Use $content-rule-starters to extract exact rules from my content guidance, configure the shipped checks, and leave judgment calls for review."

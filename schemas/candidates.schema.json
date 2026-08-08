@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:content-rule-starters:candidates:1",
+  "title": "Content rule candidate inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source",
+    "units"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "content-rule-candidates/1"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]{0,79}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "pattern": "^(?!/|~)(?!.*://)(?!.*\\\\)(?!.*(?:/\\.\\./|^\\.\\./|/\\.\\.$|^\\.\\.$))[^:]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "units": {
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "line_start",
+          "line_end",
+          "quote",
+          "guidance_type",
+          "automation_status",
+          "proposed_check",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{0,79}$"
+          },
+          "line_start": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "line_end": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "guidance_type": {
+            "enum": [
+              "deterministic_constraint",
+              "semi_deterministic_pattern",
+              "subjective_quality",
+              "workflow_process",
+              "source_or_scope",
+              "content_model",
+              "safety_policy",
+              "example"
+            ]
+          },
+          "automation_status": {
+            "enum": [
+              "ready_check",
+              "needs_target_mapping",
+              "needs_human_threshold",
+              "needs_judgment",
+              "context_only",
+              "unsupported"
+            ]
+          },
+          "proposed_check": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "banned_terms",
+              "character_limit",
+              "required_terminology",
+              "required_fields",
+              null
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "content-artifact/1",
+  "instances": [
+    {
+      "id": "notice-01",
+      "surface": "workspace-deletion",
+      "fields": {
+        "action_label": "Try again",
+        "body": "Try again or contact support about this workspace.",
+        "title": "We couldn’t delete this workspace"
+      }
+    }
+  ]
+}

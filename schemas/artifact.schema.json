@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:content-rule-starters:artifact:1",
+  "title": "Typed content artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "instances"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "content-artifact/1"
+    },
+    "instances": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "surface",
+          "fields"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{0,79}$"
+          },
+          "surface": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "fields": {
+            "type": "object",
+            "maxProperties": 200,
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          }
+        }
+      }
+    }
+  }
+}

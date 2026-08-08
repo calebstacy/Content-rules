@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:content-rule-starters:rules:1",
+  "title": "Content rule set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "rule_set",
+    "sources",
+    "rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "content-rule-set/1"
+    },
+    "rule_set": {
+      "$ref": "#/$defs/rule_set"
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,79}$"
+    },
+    "string_list": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "rule_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "status",
+        "owner",
+        "decision_ref"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "adopted"
+          ]
+        },
+        "owner": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "decision_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 300
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "adopted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "owner": {
+                "type": "string",
+                "minLength": 1
+              },
+              "decision_ref": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "owner": {
+                "const": null
+              },
+              "decision_ref": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "pattern": "^(?!/|~)(?!.*://)(?!.*\\\\)(?!.*(?:/\\.\\./|^\\.\\./|/\\.\\.$|^\\.\\.$))[^:]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surfaces",
+        "fields"
+      ],
+      "properties": {
+        "surfaces": {
+          "$ref": "#/$defs/string_list"
+        },
+        "fields": {
+          "$ref": "#/$defs/string_list"
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "line_start",
+        "line_end",
+        "quote"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "line_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "line_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "check",
+        "scope",
+        "params",
+        "source_refs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "check": {
+          "enum": [
+            "banned_terms",
+            "character_limit",
+            "required_terminology",
+            "required_fields"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "params": {
+          "type": "object"
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "banned_terms"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/banned_terms_params"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "character_limit"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/character_limit_params"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "required_terminology"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/required_terminology_params"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "check": {
+                "const": "required_fields"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "$ref": "#/$defs/required_fields_params"
+              },
+              "scope": {
+                "properties": {
+                  "fields": {
+                    "const": [
+                      "*"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "match": {
+      "enum": [
+        "whole",
+        "substring"
+      ]
+    },
+    "banned_terms_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "terms",
+        "case_sensitive",
+        "match"
+      ],
+      "properties": {
+        "terms": {
+          "$ref": "#/$defs/string_list"
+        },
+        "case_sensitive": {
+          "type": "boolean"
+        },
+        "match": {
+          "$ref": "#/$defs/match"
+        }
+      }
+    },
+    "character_limit_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum",
+        "count"
+      ],
+      "properties": {
+        "maximum": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "count": {
+          "const": "unicode_code_points"
+        }
+      }
+    },
+    "required_terminology_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preferred",
+        "instead_of",
+        "case_sensitive",
+        "match"
+      ],
+      "properties": {
+        "preferred": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "instead_of": {
+          "$ref": "#/$defs/string_list"
+        },
+        "case_sensitive": {
+          "type": "boolean"
+        },
+        "match": {
+          "$ref": "#/$defs/match"
+        }
+      }
+    },
+    "required_fields_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fields",
+        "require_non_empty"
+      ],
+      "properties": {
+        "fields": {
+          "$ref": "#/$defs/string_list"
+        },
+        "require_non_empty": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

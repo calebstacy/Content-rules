@@ -1,0 +1,4 @@
+"""Fixed content-rule checkers used by the public starter kit."""
+
+TOOL_NAME = "content-rule-starters"
+TOOL_VERSION = "0.1.0"

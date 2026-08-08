@@ -1,0 +1,14 @@
+{
+  "schema_version": "content-artifact/1",
+  "instances": [
+    {
+      "id": "notice-01",
+      "surface": "workspace-deletion",
+      "fields": {
+        "action_label": "",
+        "body": "Remove this project from your blacklist and try again.",
+        "title": "We couldn't delete this workspace because something went wrong"
+      }
+    }
+  ]
+}

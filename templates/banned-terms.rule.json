@@ -1,0 +1,28 @@
+{
+  "check": "banned_terms",
+  "description": "__REPLACE_ME__",
+  "id": "__REPLACE_ME__",
+  "params": {
+    "case_sensitive": "__REPLACE_ME__",
+    "match": "__REPLACE_ME__",
+    "terms": [
+      "__REPLACE_ME__"
+    ]
+  },
+  "scope": {
+    "fields": [
+      "__REPLACE_ME__"
+    ],
+    "surfaces": [
+      "__REPLACE_ME__"
+    ]
+  },
+  "source_refs": [
+    {
+      "line_end": 1,
+      "line_start": 1,
+      "quote": "__REPLACE_ME__",
+      "source_id": "__REPLACE_ME__"
+    }
+  ]
+}

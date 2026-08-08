@@ -1,0 +1,13 @@
+{
+  "schema_version": "content-artifact/1",
+  "instances": [
+    {
+      "id": "example-01",
+      "surface": "__REPLACE_ME__",
+      "fields": {
+        "body": "__REPLACE_ME__",
+        "title": "__REPLACE_ME__"
+      }
+    }
+  ]
+}

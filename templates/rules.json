@@ -1,0 +1,18 @@
+{
+  "rule_set": {
+    "decision_ref": null,
+    "id": "__REPLACE_ME__",
+    "name": "__REPLACE_ME__",
+    "owner": null,
+    "status": "proposed"
+  },
+  "rules": [],
+  "schema_version": "content-rule-set/1",
+  "sources": [
+    {
+      "id": "__REPLACE_ME__",
+      "path": "__REPLACE_ME__",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

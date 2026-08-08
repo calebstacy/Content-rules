@@ -1,0 +1,133 @@
+{
+  "rule_set": {
+    "decision_ref": null,
+    "id": "workspace-deletion-notices",
+    "name": "Workspace deletion notices",
+    "owner": null,
+    "status": "proposed"
+  },
+  "rules": [
+    {
+      "check": "character_limit",
+      "description": "Limit workspace deletion titles to 50 Unicode code points.",
+      "id": "title-max-50",
+      "params": {
+        "count": "unicode_code_points",
+        "maximum": 50
+      },
+      "scope": {
+        "fields": [
+          "title"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 3,
+          "line_start": 3,
+          "quote": "Titles can contain no more than 50 Unicode code points after NFC normalization.",
+          "source_id": "workspace-guidance"
+        }
+      ]
+    },
+    {
+      "check": "banned_terms",
+      "description": "Flag blacklist and whitelist in visible notice fields.",
+      "id": "banned-list-terms",
+      "params": {
+        "case_sensitive": false,
+        "match": "whole",
+        "terms": [
+          "blacklist",
+          "whitelist"
+        ]
+      },
+      "scope": {
+        "fields": [
+          "title",
+          "body",
+          "action_label"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 4,
+          "line_start": 4,
+          "quote": "Do not use the exact whole terms “blacklist” or “whitelist” in the title, body, or action label, regardless of letter case.",
+          "source_id": "workspace-guidance"
+        }
+      ]
+    },
+    {
+      "check": "required_terminology",
+      "description": "Flag project and identify workspace as its configured replacement.",
+      "id": "workspace-terminology",
+      "params": {
+        "case_sensitive": false,
+        "instead_of": [
+          "project"
+        ],
+        "match": "whole",
+        "preferred": "workspace"
+      },
+      "scope": {
+        "fields": [
+          "body"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 5,
+          "line_start": 5,
+          "quote": "In the body, use the exact whole term “workspace” instead of “project,” regardless of letter case.",
+          "source_id": "workspace-guidance"
+        }
+      ]
+    },
+    {
+      "check": "required_fields",
+      "description": "Require non-empty title, body, and action label fields.",
+      "id": "required-notice-fields",
+      "params": {
+        "fields": [
+          "title",
+          "body",
+          "action_label"
+        ],
+        "require_non_empty": true
+      },
+      "scope": {
+        "fields": [
+          "*"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 6,
+          "line_start": 6,
+          "quote": "Include a non-empty title, body, and action label.",
+          "source_id": "workspace-guidance"
+        }
+      ]
+    }
+  ],
+  "schema_version": "content-rule-set/1",
+  "sources": [
+    {
+      "id": "workspace-guidance",
+      "path": "examples/workspace-deletion/guidance.md",
+      "sha256": "349a99768da7a1c71468eb9b595f8e474d517928a1ec0e00ee4420fa64ad38af"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "check": "character_limit",
+  "description": "__REPLACE_ME__",
+  "id": "__REPLACE_ME__",
+  "params": {
+    "count": "unicode_code_points",
+    "maximum": "__REPLACE_ME__"
+  },
+  "scope": {
+    "fields": [
+      "__REPLACE_ME__"
+    ],
+    "surfaces": [
+      "__REPLACE_ME__"
+    ]
+  },
+  "source_refs": [
+    {
+      "line_end": 1,
+      "line_start": 1,
+      "quote": "__REPLACE_ME__",
+      "source_id": "__REPLACE_ME__"
+    }
+  ]
+}

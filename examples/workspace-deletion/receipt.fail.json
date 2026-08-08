@@ -1,0 +1,182 @@
+{
+  "artifact": {
+    "canonical_sha256": "bf250a951f52d72f16c72f4590684ffd81e69e8d5e9d5a1eb4c848247883aa4f",
+    "instance_count": 1,
+    "path": "artifact.fail.json",
+    "sha256": "be9be1f8cb06456447f8920ff8ef5dd8521324ba035766209fea403dc7c0811c"
+  },
+  "protocol": "content-rule-receipt/1",
+  "results": [
+    {
+      "check": "character_limit",
+      "description": "Limit workspace deletion titles to 50 Unicode code points.",
+      "evidence": [
+        {
+          "field": "title",
+          "instance_id": "notice-01",
+          "maximum": 50,
+          "measured": 62,
+          "surface": "workspace-deletion",
+          "unit": "unicode_code_points_after_nfc"
+        }
+      ],
+      "message": "One or more fields exceeded the character limit.",
+      "review_evidence": [],
+      "rule_id": "title-max-50",
+      "scope": {
+        "fields": [
+          "title"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 3,
+          "line_start": 3,
+          "quote": "Titles can contain no more than 50 Unicode code points after NFC normalization.",
+          "source_id": "workspace-guidance"
+        }
+      ],
+      "status": "FAIL"
+    },
+    {
+      "check": "banned_terms",
+      "description": "Flag blacklist and whitelist in visible notice fields.",
+      "evidence": [
+        {
+          "field": "body",
+          "instance_id": "notice-01",
+          "match": "whole",
+          "occurrences": 1,
+          "surface": "workspace-deletion",
+          "term": "blacklist"
+        }
+      ],
+      "message": "Configured banned terminology was found.",
+      "review_evidence": [],
+      "rule_id": "banned-list-terms",
+      "scope": {
+        "fields": [
+          "title",
+          "body",
+          "action_label"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 4,
+          "line_start": 4,
+          "quote": "Do not use the exact whole terms “blacklist” or “whitelist” in the title, body, or action label, regardless of letter case.",
+          "source_id": "workspace-guidance"
+        }
+      ],
+      "status": "FAIL"
+    },
+    {
+      "check": "required_terminology",
+      "description": "Flag project and identify workspace as its configured replacement.",
+      "evidence": [
+        {
+          "deprecated": "project",
+          "field": "body",
+          "instance_id": "notice-01",
+          "match": "whole",
+          "occurrences": 1,
+          "preferred": "workspace",
+          "surface": "workspace-deletion"
+        }
+      ],
+      "message": "Configured deprecated terminology was found.",
+      "review_evidence": [],
+      "rule_id": "workspace-terminology",
+      "scope": {
+        "fields": [
+          "body"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 5,
+          "line_start": 5,
+          "quote": "In the body, use the exact whole term “workspace” instead of “project,” regardless of letter case.",
+          "source_id": "workspace-guidance"
+        }
+      ],
+      "status": "FAIL"
+    },
+    {
+      "check": "required_fields",
+      "description": "Require non-empty title, body, and action label fields.",
+      "evidence": [
+        {
+          "empty_fields": [
+            "action_label"
+          ],
+          "instance_id": "notice-01",
+          "missing_fields": [],
+          "surface": "workspace-deletion"
+        }
+      ],
+      "message": "Required fields were missing or empty.",
+      "review_evidence": [],
+      "rule_id": "required-notice-fields",
+      "scope": {
+        "fields": [
+          "*"
+        ],
+        "surfaces": [
+          "workspace-deletion"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 6,
+          "line_start": 6,
+          "quote": "Include a non-empty title, body, and action label.",
+          "source_id": "workspace-guidance"
+        }
+      ],
+      "status": "FAIL"
+    }
+  ],
+  "rule_set": {
+    "canonical_sha256": "daa4d5f6350ffd89d5c24e3e5788833be1b3ef99d2a9a9fe4d051f3b21800fe5",
+    "decision_ref": null,
+    "effect": "check result only; the calling workflow decides consequences",
+    "id": "workspace-deletion-notices",
+    "name": "Workspace deletion notices",
+    "owner": null,
+    "path": "rules.json",
+    "sha256": "77c51aef9781ba6a833f0ae10ff8dc799eef5479e52a337eaa6c05942c5b4591",
+    "status": "proposed"
+  },
+  "sources": [
+    {
+      "id": "workspace-guidance",
+      "path": "examples/workspace-deletion/guidance.md",
+      "sha256": "349a99768da7a1c71468eb9b595f8e474d517928a1ec0e00ee4420fa64ad38af",
+      "status": "VERIFIED"
+    }
+  ],
+  "summary": {
+    "applicable": 4,
+    "failed": 4,
+    "not_applicable": 0,
+    "passed": 0,
+    "review": 0,
+    "status": "FAIL",
+    "unresolved_evidence": 0
+  },
+  "tool": {
+    "name": "content-rule-starters",
+    "version": "0.1.0"
+  }
+}

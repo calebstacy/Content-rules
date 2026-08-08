@@ -1,0 +1,60 @@
+{
+  "schema_version": "content-rule-candidates/1",
+  "source": {
+    "id": "workspace-guidance",
+    "path": "examples/workspace-deletion/guidance.md",
+    "sha256": "349a99768da7a1c71468eb9b595f8e474d517928a1ec0e00ee4420fa64ad38af"
+  },
+  "units": [
+    {
+      "automation_status": "ready_check",
+      "guidance_type": "deterministic_constraint",
+      "id": "guidance-001",
+      "line_end": 3,
+      "line_start": 3,
+      "proposed_check": "character_limit",
+      "quote": "Titles can contain no more than 50 Unicode code points after NFC normalization.",
+      "reason": "The threshold, counting unit, normalization, and target field are explicit."
+    },
+    {
+      "automation_status": "ready_check",
+      "guidance_type": "deterministic_constraint",
+      "id": "guidance-002",
+      "line_end": 4,
+      "line_start": 4,
+      "proposed_check": "banned_terms",
+      "quote": "Do not use the exact whole terms “blacklist” or “whitelist” in the title, body, or action label, regardless of letter case.",
+      "reason": "The terms, matching behavior, case behavior, and target fields are explicit."
+    },
+    {
+      "automation_status": "ready_check",
+      "guidance_type": "deterministic_constraint",
+      "id": "guidance-003",
+      "line_end": 5,
+      "line_start": 5,
+      "proposed_check": "required_terminology",
+      "quote": "In the body, use the exact whole term “workspace” instead of “project,” regardless of letter case.",
+      "reason": "The deprecated term, replacement, matching behavior, case behavior, and target field are explicit."
+    },
+    {
+      "automation_status": "ready_check",
+      "guidance_type": "content_model",
+      "id": "guidance-004",
+      "line_end": 6,
+      "line_start": 6,
+      "proposed_check": "required_fields",
+      "quote": "Include a non-empty title, body, and action label.",
+      "reason": "The required fields and non-empty condition are explicit."
+    },
+    {
+      "automation_status": "needs_judgment",
+      "guidance_type": "subjective_quality",
+      "id": "guidance-005",
+      "line_end": 7,
+      "line_start": 7,
+      "proposed_check": null,
+      "quote": "Sound calm and helpful.",
+      "reason": "The source gives no observable predicate for calmness or helpfulness."
+    }
+  ]
+}
