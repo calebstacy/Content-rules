@@ -21,12 +21,25 @@ You do not need to write Python. The Python is already here. Your team supplies 
 
 - **A skill for your agent:** it walks through your guidance, proposes runnable rules, and prepares test examples.
 - **Four working content checks:** banned terms, character limits, preferred terminology, and required fields.
+- **A self-linting loop:** the agent checks its draft, fixes exact failures, and checks again before returning the work.
 - **A repeatable result:** the same content and rule produce the same answer every time.
 - **A source trail:** every proposed rule points back to the guidance it came from.
 - **A review queue:** tone, meaning, usefulness, and other genuine design decisions stay visible for people.
 - **A path to expand:** new kinds of exact content rules can become new checkers without turning the style guide into a larger prompt.
 
 Content Rules does not replace your standards. It gives the enforceable parts somewhere to run.
+
+## Make any agent self-lint
+
+Any agent that can run a local command can use the same loop:
+
+```text
+Draft → run Content Rules → fix exact failures → run it again → return the receipt
+```
+
+The reusable instructions are in [`agents/self-lint.md`](agents/self-lint.md). They tell the agent to revise the content when a check fails without weakening the rule, changing the checker, or hiding anything that still needs review.
+
+The loop gives the agent a reliable way to correct its own output. When a check must happen every time, put the same command in the workflow that accepts the agent's work.
 
 ## Start here
 
