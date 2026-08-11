@@ -1,0 +1,135 @@
+{
+  "schema_version": "content-rule-set/2",
+  "rule_set": {
+    "id": "contextual-title-limits",
+    "name": "Contextual notice title limits",
+    "status": "adopted",
+    "owner": "Content standards owner",
+    "decision_ref": "EXAMPLE-RULESET-ADOPTION"
+  },
+  "sources": [
+    {
+      "id": "contextual-title-guidance",
+      "path": "guidance.md",
+      "sha256": "a8a958333eabdedf1f5a4e38b9a8bcbf363c5fd703395fb2d48851831b2b93b4"
+    }
+  ],
+  "fact_definitions": [
+    {
+      "id": "notice.variant",
+      "description": "The configured variant of one notice instance.",
+      "level": "instance",
+      "type": "string",
+      "allowed_values": [
+        "standard",
+        "legal_disclosure"
+      ],
+      "accepted_sources": [
+        {
+          "basis": "observed",
+          "provider": "notice-context"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "notice-title-general-limit",
+      "description": "Limit standard notice titles to 50 Unicode code points after NFC normalization.",
+      "check": "character_limit",
+      "scope": {
+        "surfaces": [
+          "notice"
+        ],
+        "fields": [
+          "title"
+        ]
+      },
+      "params": {
+        "maximum": 50,
+        "count": "unicode_code_points"
+      },
+      "source_refs": [
+        {
+          "source_id": "contextual-title-guidance",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "On the notice surface, the title field must contain no more than 50 NFC-normalized Unicode code points."
+        }
+      ]
+    },
+    {
+      "id": "notice-title-legal-limit",
+      "description": "Limit legal-disclosure notice titles to 80 Unicode code points after NFC normalization.",
+      "check": "character_limit",
+      "scope": {
+        "surfaces": [
+          "notice"
+        ],
+        "fields": [
+          "title"
+        ]
+      },
+      "params": {
+        "maximum": 80,
+        "count": "unicode_code_points"
+      },
+      "source_refs": [
+        {
+          "source_id": "contextual-title-guidance",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "When the instance fact notice.variant equals legal_disclosure, the notice title field must contain no more than 80 NFC-normalized Unicode code points."
+        }
+      ],
+      "applies_when": {
+        "all": [
+          {
+            "fact": "notice.variant",
+            "op": "equals",
+            "value": "legal_disclosure"
+          }
+        ],
+        "source_refs": [
+          {
+            "source_id": "contextual-title-guidance",
+            "line_start": 2,
+            "line_end": 2,
+            "quote": "When the instance fact notice.variant equals legal_disclosure, the notice title field must contain no more than 80 NFC-normalized Unicode code points."
+          },
+          {
+            "source_id": "contextual-title-guidance",
+            "line_start": 4,
+            "line_end": 4,
+            "quote": "The notice-context provider observes notice.variant from the notice component variant for each notice instance; only this observed provider mapping is accepted for deterministic applicability."
+          }
+        ]
+      }
+    }
+  ],
+  "conflict_groups": [
+    {
+      "id": "notice-title-length",
+      "description": "Competing maximum lengths for the same notice title field.",
+      "members": [
+        "notice-title-general-limit",
+        "notice-title-legal-limit"
+      ],
+      "supersession": [
+        {
+          "rule_id": "notice-title-legal-limit",
+          "supersedes": "notice-title-general-limit",
+          "decision_ref": "EXAMPLE-LEGAL-TITLE-PRECEDENCE",
+          "source_refs": [
+            {
+              "source_id": "contextual-title-guidance",
+              "line_start": 5,
+              "line_end": 5,
+              "quote": "Under decision EXAMPLE-LEGAL-TITLE-PRECEDENCE, notice-title-legal-limit supersedes notice-title-general-limit when both rules apply."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

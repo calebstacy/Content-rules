@@ -1,0 +1,45 @@
+{
+  "id": "__REPLACE_ME__",
+  "description": "__REPLACE_ME__",
+  "check": "banned_terms",
+  "scope": {
+    "surfaces": [
+      "__REPLACE_ME__"
+    ],
+    "fields": [
+      "__REPLACE_ME__"
+    ]
+  },
+  "params": {
+    "terms": [
+      "__REPLACE_ME__"
+    ],
+    "case_sensitive": "__REPLACE_ME__",
+    "match": "__REPLACE_ME__"
+  },
+  "source_refs": [
+    {
+      "source_id": "__REPLACE_ME__",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "__REPLACE_ME__"
+    }
+  ],
+  "applies_when": {
+    "all": [
+      {
+        "fact": "__REPLACE_ME__",
+        "op": "equals",
+        "value": "__REPLACE_ME__"
+      }
+    ],
+    "source_refs": [
+      {
+        "source_id": "__REPLACE_ME__",
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "__REPLACE_ME__"
+      }
+    ]
+  }
+}

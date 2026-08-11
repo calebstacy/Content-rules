@@ -1,0 +1,29 @@
+{
+  "id": "__REPLACE_ME__",
+  "description": "__REPLACE_ME__",
+  "check": "required_terminology",
+  "scope": {
+    "surfaces": [
+      "__REPLACE_ME__"
+    ],
+    "fields": [
+      "__REPLACE_ME__"
+    ]
+  },
+  "params": {
+    "preferred": "__REPLACE_ME__",
+    "instead_of": [
+      "__REPLACE_ME__"
+    ],
+    "case_sensitive": "__REPLACE_ME__",
+    "match": "__REPLACE_ME__"
+  },
+  "source_refs": [
+    {
+      "source_id": "__REPLACE_ME__",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "__REPLACE_ME__"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "content-artifact/2",
+  "facts": [],
+  "instances": [
+    {
+      "id": "example-01",
+      "surface": "__REPLACE_ME__",
+      "fields": {
+        "body": "__REPLACE_ME__",
+        "title": "__REPLACE_ME__"
+      },
+      "facts": [
+        {
+          "id": "instance-fact-01",
+          "fact": "__REPLACE_ME__",
+          "value": "__REPLACE_ME__",
+          "provenance": {
+            "basis": "observed",
+            "provider": "__REPLACE_ME__",
+            "ref": "__REPLACE_ME__"
+          }
+        }
+      ]
+    }
+  ]
+}

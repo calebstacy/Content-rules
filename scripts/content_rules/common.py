@@ -21,9 +21,18 @@ MAX_INSTANCES = 1000
 MAX_TOTAL_TERM_ENTRIES = 500
 MAX_REPORTED_OCCURRENCES = 1000
 MAX_JSON_NUMBER_CHARACTERS = 100
+MAX_FACT_DEFINITIONS = 100
+MAX_FACT_ASSERTIONS = 100
+MAX_RULE_INSTANCE_EVALUATIONS = 10_000
+MAX_RECEIPT_EVIDENCE_ITEMS_PER_RESULT = 1_000
+MAX_RECEIPT_TRACE_UNITS = 25_000
+MAX_RECEIPT_BYTES = 16 * 1024 * 1024
 RULE_SET_PROTOCOL = "content-rule-set/1"
+RULE_SET_PROTOCOL_V2 = "content-rule-set/2"
 ARTIFACT_PROTOCOL = "content-artifact/1"
+ARTIFACT_PROTOCOL_V2 = "content-artifact/2"
 RECEIPT_PROTOCOL = "content-rule-receipt/1"
+RECEIPT_PROTOCOL_V2 = "content-rule-receipt/2"
 ERROR_PROTOCOL = "content-rule-error/1"
 VALIDATION_PROTOCOL = "content-rule-validation/1"
 CHECK_TYPES = {
@@ -267,7 +276,7 @@ def _contains_unresolved_template(value: Any) -> bool:
     return False
 
 
-def validate_rule_set(raw: Any) -> dict[str, Any]:
+def _validate_rule_set_v1(raw: Any) -> dict[str, Any]:
     document = _object(raw, "rule set")
     if _contains_unresolved_template(document):
         raise RuleError(
@@ -445,7 +454,15 @@ def validate_rule_set(raw: Any) -> dict[str, Any]:
     return document
 
 
-def validate_artifact(raw: Any) -> dict[str, Any]:
+def validate_rule_set(raw: Any) -> dict[str, Any]:
+    if isinstance(raw, dict) and raw.get("schema_version") == RULE_SET_PROTOCOL_V2:
+        from .contextual import validate_rule_set_v2
+
+        return validate_rule_set_v2(raw)
+    return _validate_rule_set_v1(raw)
+
+
+def _validate_artifact_v1(raw: Any) -> dict[str, Any]:
     artifact = _object(raw, "artifact")
     _reject_unknown(artifact, {"schema_version", "instances"}, "artifact")
     if artifact.get("schema_version") != ARTIFACT_PROTOCOL:
@@ -481,6 +498,14 @@ def validate_artifact(raw: Any) -> dict[str, Any]:
             if not isinstance(field_name, str) or not field_name.strip() or len(field_name) > 120:
                 raise RuleError("INVALID_ARTIFACT", f"{label}.fields has an invalid field name")
     return artifact
+
+
+def validate_artifact(raw: Any) -> dict[str, Any]:
+    if isinstance(raw, dict) and raw.get("schema_version") == ARTIFACT_PROTOCOL_V2:
+        from .contextual import validate_artifact_v2
+
+        return validate_artifact_v2(raw)
+    return _validate_artifact_v1(raw)
 
 
 def verify_sources(
@@ -526,20 +551,30 @@ def verify_sources(
         resolved_sources.append(resolved_candidate)
         source_lines[source["id"]] = text.splitlines()
 
-    for rule in rule_set["rules"]:
-        for ref in rule["source_refs"]:
-            lines = source_lines[ref["source_id"]]
-            if ref["line_end"] > len(lines):
-                raise RuleError(
-                    "SOURCE_REF_MISMATCH",
-                    f"Rule {rule['id']} cites lines beyond the end of source {ref['source_id']}",
-                )
-            excerpt = "\n".join(lines[ref["line_start"] - 1 : ref["line_end"]])
-            if ref["quote"] not in excerpt:
-                raise RuleError(
-                    "SOURCE_REF_MISMATCH",
-                    f"Rule {rule['id']} quote does not match its cited source lines",
-                )
+    if rule_set["schema_version"] == RULE_SET_PROTOCOL_V2:
+        from .contextual import iter_source_refs_v2
+
+        source_references = iter_source_refs_v2(rule_set)
+    else:
+        source_references = (
+            (f"Rule {rule['id']}", ref)
+            for rule in rule_set["rules"]
+            for ref in rule["source_refs"]
+        )
+
+    for reference_owner, ref in source_references:
+        lines = source_lines[ref["source_id"]]
+        if ref["line_end"] > len(lines):
+            raise RuleError(
+                "SOURCE_REF_MISMATCH",
+                f"{reference_owner} cites lines beyond the end of source {ref['source_id']}",
+            )
+        excerpt = "\n".join(lines[ref["line_start"] - 1 : ref["line_end"]])
+        if ref["quote"] not in excerpt:
+            raise RuleError(
+                "SOURCE_REF_MISMATCH",
+                f"{reference_owner} quote does not match its cited source lines",
+            )
     return verified, resolved_sources
 
 
