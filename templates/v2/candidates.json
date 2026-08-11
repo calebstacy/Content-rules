@@ -1,0 +1,49 @@
+{
+  "schema_version": "content-rule-candidates/2",
+  "source": {
+    "id": "__REPLACE_ME__",
+    "path": "__REPLACE_ME__",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "units": [
+    {
+      "id": "guidance-001",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "__REPLACE_ME__",
+      "guidance_type": "semi_deterministic_pattern",
+      "automation_status": "needs_context_mapping",
+      "proposed_check": null,
+      "reason": "__REPLACE_ME__",
+      "required_facts": [
+        {
+          "fact": "__REPLACE_ME__",
+          "level": "instance",
+          "type": "string",
+          "allowed_values": [
+            "__REPLACE_ME__"
+          ],
+          "reason": "__REPLACE_ME__"
+        }
+      ],
+      "fact_mappings": [
+        {
+          "fact": "__REPLACE_ME__",
+          "status": "missing",
+          "basis": null,
+          "provider": null,
+          "ref": null,
+          "reason": "__REPLACE_ME__"
+        }
+      ],
+      "competing_rule_ids": [
+        "__REPLACE_ME__"
+      ],
+      "precedence": {
+        "status": "unresolved",
+        "supersedes": [],
+        "decision_ref": null
+      }
+    }
+  ]
+}

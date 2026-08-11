@@ -1,0 +1,189 @@
+{
+  "schema_version": "content-rule-candidates/2",
+  "source": {
+    "id": "contextual-title-guidance",
+    "path": "guidance.md",
+    "sha256": "a8a958333eabdedf1f5a4e38b9a8bcbf363c5fd703395fb2d48851831b2b93b4"
+  },
+  "units": [
+    {
+      "id": "general-title-limit",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "On the notice surface, the title field must contain no more than 50 NFC-normalized Unicode code points.",
+      "guidance_type": "deterministic_constraint",
+      "automation_status": "ready_check",
+      "proposed_check": "character_limit",
+      "reason": "The source supplies an exact surface, field, maximum, and supported counting unit.",
+      "required_facts": [],
+      "fact_mappings": [],
+      "competing_rule_ids": [
+        "notice-title-legal-limit"
+      ],
+      "precedence": {
+        "status": "not_applicable",
+        "supersedes": [],
+        "decision_ref": null
+      }
+    },
+    {
+      "id": "legal-title-limit",
+      "line_start": 2,
+      "line_end": 2,
+      "quote": "When the instance fact notice.variant equals legal_disclosure, the notice title field must contain no more than 80 NFC-normalized Unicode code points.",
+      "guidance_type": "deterministic_constraint",
+      "automation_status": "ready_check",
+      "proposed_check": "character_limit",
+      "reason": "The source supplies an exact maximum and an exact condition whose context mapping is separately documented.",
+      "required_facts": [
+        {
+          "fact": "notice.variant",
+          "level": "instance",
+          "type": "string",
+          "allowed_values": [
+            "standard",
+            "legal_disclosure"
+          ],
+          "reason": "The legal title limit applies only when this fact equals legal_disclosure."
+        }
+      ],
+      "fact_mappings": [
+        {
+          "fact": "notice.variant",
+          "status": "confirmed",
+          "basis": "observed",
+          "provider": "notice-context",
+          "ref": "notice component variant per notice instance",
+          "reason": "The source explicitly names the provider, basis, instance level, and product mapping."
+        }
+      ],
+      "competing_rule_ids": [
+        "notice-title-general-limit"
+      ],
+      "precedence": {
+        "status": "recorded_adopted",
+        "supersedes": [
+          "notice-title-general-limit"
+        ],
+        "decision_ref": "EXAMPLE-LEGAL-TITLE-PRECEDENCE"
+      }
+    },
+    {
+      "id": "variant-fact-contract",
+      "line_start": 3,
+      "line_end": 4,
+      "quote": "The notice.variant fact is an instance-level string whose allowed values are standard and legal_disclosure.",
+      "guidance_type": "content_model",
+      "automation_status": "context_only",
+      "proposed_check": null,
+      "reason": "These lines define the closed fact vocabulary and the accepted provider mapping used by applicability.",
+      "required_facts": [
+        {
+          "fact": "notice.variant",
+          "level": "instance",
+          "type": "string",
+          "allowed_values": [
+            "standard",
+            "legal_disclosure"
+          ],
+          "reason": "The conditional rule needs one exact variant value for each notice instance."
+        }
+      ],
+      "fact_mappings": [
+        {
+          "fact": "notice.variant",
+          "status": "confirmed",
+          "basis": "observed",
+          "provider": "notice-context",
+          "ref": "notice component variant per notice instance",
+          "reason": "Only an observation from notice-context is accepted by the rule set."
+        }
+      ],
+      "competing_rule_ids": [],
+      "precedence": {
+        "status": "not_applicable",
+        "supersedes": [],
+        "decision_ref": null
+      }
+    },
+    {
+      "id": "legal-precedence-decision",
+      "line_start": 5,
+      "line_end": 5,
+      "quote": "Under decision EXAMPLE-LEGAL-TITLE-PRECEDENCE, notice-title-legal-limit supersedes notice-title-general-limit when both rules apply.",
+      "guidance_type": "workflow_process",
+      "automation_status": "context_only",
+      "proposed_check": null,
+      "reason": "This is governance evidence for an explicit precedence edge rather than a content predicate.",
+      "required_facts": [],
+      "fact_mappings": [],
+      "competing_rule_ids": [
+        "notice-title-general-limit",
+        "notice-title-legal-limit"
+      ],
+      "precedence": {
+        "status": "recorded_adopted",
+        "supersedes": [
+          "notice-title-general-limit"
+        ],
+        "decision_ref": "EXAMPLE-LEGAL-TITLE-PRECEDENCE"
+      }
+    },
+    {
+      "id": "illustrative-adoption-record",
+      "line_start": 6,
+      "line_end": 6,
+      "quote": "For this illustrative specimen, Content standards owner records the complete rule set as adopted under decision EXAMPLE-RULESET-ADOPTION.",
+      "guidance_type": "workflow_process",
+      "automation_status": "context_only",
+      "proposed_check": null,
+      "reason": "The runtime records adoption metadata but does not authenticate the named owner or decision.",
+      "required_facts": [],
+      "fact_mappings": [],
+      "competing_rule_ids": [],
+      "precedence": {
+        "status": "not_applicable",
+        "supersedes": [],
+        "decision_ref": null
+      }
+    },
+    {
+      "id": "unknown-context-behavior",
+      "line_start": 7,
+      "line_end": 7,
+      "quote": "If notice.variant is missing, comes from an unaccepted provider or basis, or has conflicting accepted assertions, applicability requires review rather than an assumed value.",
+      "guidance_type": "source_or_scope",
+      "automation_status": "context_only",
+      "proposed_check": null,
+      "reason": "This states the conservative evidence boundary for contextual applicability.",
+      "required_facts": [
+        {
+          "fact": "notice.variant",
+          "level": "instance",
+          "type": "string",
+          "allowed_values": [
+            "standard",
+            "legal_disclosure"
+          ],
+          "reason": "Without one accepted value, the contextual decision remains unresolved."
+        }
+      ],
+      "fact_mappings": [
+        {
+          "fact": "notice.variant",
+          "status": "confirmed",
+          "basis": "observed",
+          "provider": "notice-context",
+          "ref": "notice component variant per notice instance",
+          "reason": "This is the only accepted deterministic mapping in the specimen."
+        }
+      ],
+      "competing_rule_ids": [],
+      "precedence": {
+        "status": "not_applicable",
+        "supersedes": [],
+        "decision_ref": null
+      }
+    }
+  ]
+}

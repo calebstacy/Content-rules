@@ -1,0 +1,15 @@
+{
+  "id": "__REPLACE_ME__",
+  "description": "__REPLACE_ME__",
+  "level": "instance",
+  "type": "string",
+  "allowed_values": [
+    "__REPLACE_ME__"
+  ],
+  "accepted_sources": [
+    {
+      "basis": "observed",
+      "provider": "__REPLACE_ME__"
+    }
+  ]
+}

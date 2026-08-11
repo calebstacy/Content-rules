@@ -5,7 +5,7 @@ from typing import Any, Callable
 
 from . import TOOL_NAME, TOOL_VERSION
 from . import banned_terms, character_limit, required_fields, required_terminology
-from .common import RECEIPT_PROTOCOL, canonical_hash
+from .common import RECEIPT_PROTOCOL, RULE_SET_PROTOCOL_V2, canonical_hash
 
 
 Evaluator = Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]]
@@ -17,7 +17,7 @@ EVALUATORS: dict[str, Evaluator] = {
 }
 
 
-def run_checks(
+def _run_checks_v1(
     rule_set: dict[str, Any],
     artifact: dict[str, Any],
     *,
@@ -72,6 +72,43 @@ def run_checks(
         },
         "results": results,
     }
+
+
+def run_checks(
+    rule_set: dict[str, Any],
+    artifact: dict[str, Any],
+    *,
+    rules_path: Path,
+    artifact_path: Path,
+    rules_sha256: str,
+    artifact_sha256: str,
+    verified_sources: list[dict[str, str]],
+) -> dict[str, Any]:
+    from .contextual import validate_artifact_bindings
+
+    validate_artifact_bindings(rule_set, artifact)
+    if rule_set["schema_version"] == RULE_SET_PROTOCOL_V2:
+        from .runtime_v2 import run_checks_v2
+
+        return run_checks_v2(
+            rule_set,
+            artifact,
+            evaluators=EVALUATORS,
+            rules_path=rules_path,
+            artifact_path=artifact_path,
+            rules_sha256=rules_sha256,
+            artifact_sha256=artifact_sha256,
+            verified_sources=verified_sources,
+        )
+    return _run_checks_v1(
+        rule_set,
+        artifact,
+        rules_path=rules_path,
+        artifact_path=artifact_path,
+        rules_sha256=rules_sha256,
+        artifact_sha256=artifact_sha256,
+        verified_sources=verified_sources,
+    )
 
 
 def exit_code(receipt: dict[str, Any]) -> int:

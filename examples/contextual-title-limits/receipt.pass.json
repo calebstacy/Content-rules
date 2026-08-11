@@ -1,0 +1,207 @@
+{
+  "artifact": {
+    "canonical_sha256": "45f919770d068e9976dbdfdb3542540b4099732dd8ac5e52bd012258188f69c7",
+    "fact_assertion_count": 1,
+    "instance_count": 1,
+    "path": "artifact.pass.json",
+    "sha256": "10981d0afe255f3bd77c66abf59852c1ae6341208898c56003779f03ebc0906e"
+  },
+  "precedence_evidence": [
+    {
+      "decision_ref": "EXAMPLE-LEGAL-TITLE-PRECEDENCE",
+      "group_id": "notice-title-length",
+      "id": "a781d2dc133485b953289173fa06eff88074c52a46de0f3034c9f2d5d0059f47",
+      "rule_id": "notice-title-legal-limit",
+      "source_refs": [
+        {
+          "line_end": 5,
+          "line_start": 5,
+          "quote": "Under decision EXAMPLE-LEGAL-TITLE-PRECEDENCE, notice-title-legal-limit supersedes notice-title-general-limit when both rules apply.",
+          "source_id": "contextual-title-guidance"
+        }
+      ],
+      "supersedes": "notice-title-general-limit"
+    }
+  ],
+  "protocol": "content-rule-receipt/2",
+  "resolutions": [
+    {
+      "competing_rule_ids": [
+        "notice-title-general-limit",
+        "notice-title-legal-limit"
+      ],
+      "decision_refs": [
+        "EXAMPLE-LEGAL-TITLE-PRECEDENCE"
+      ],
+      "group_id": "notice-title-length",
+      "instance_id": "legal-notice",
+      "precedence_edge_ids": [
+        "a781d2dc133485b953289173fa06eff88074c52a46de0f3034c9f2d5d0059f47"
+      ],
+      "reason": "configured_precedence",
+      "selected_rule_id": "notice-title-legal-limit",
+      "status": "SELECTED",
+      "superseded_rule_ids": [
+        "notice-title-general-limit"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "applicability": {
+        "instances": [
+          {
+            "competing_rule_ids": [],
+            "condition": "TRUE",
+            "decision_refs": [
+              "EXAMPLE-LEGAL-TITLE-PRECEDENCE"
+            ],
+            "facts": [],
+            "group_id": "notice-title-length",
+            "instance_id": "legal-notice",
+            "precedence_edge_ids": [
+              "a781d2dc133485b953289173fa06eff88074c52a46de0f3034c9f2d5d0059f47"
+            ],
+            "selected_rule_id": "notice-title-legal-limit",
+            "state": "SUPERSEDED"
+          }
+        ],
+        "out_of_scope_count": 0,
+        "source_refs": []
+      },
+      "check": "character_limit",
+      "description": "Limit standard notice titles to 50 Unicode code points after NFC normalization.",
+      "evidence": [],
+      "message": "No artifact instance selected this rule after contextual resolution.",
+      "review_evidence": [],
+      "rule_id": "notice-title-general-limit",
+      "scope": {
+        "fields": [
+          "title"
+        ],
+        "surfaces": [
+          "notice"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 1,
+          "line_start": 1,
+          "quote": "On the notice surface, the title field must contain no more than 50 NFC-normalized Unicode code points.",
+          "source_id": "contextual-title-guidance"
+        }
+      ],
+      "status": "NOT_APPLICABLE"
+    },
+    {
+      "applicability": {
+        "instances": [
+          {
+            "competing_rule_ids": [],
+            "condition": "TRUE",
+            "decision_refs": [],
+            "facts": [
+              {
+                "accepted_assertion_ids": [
+                  "legal-notice-variant"
+                ],
+                "assertions": [
+                  {
+                    "accepted": true,
+                    "basis": "observed",
+                    "id": "legal-notice-variant",
+                    "provider": "notice-context",
+                    "ref_sha256": "3a5bcc9544fd32f908f70e4fe6968b4ba00c8c911a754c4f8a6600a2d68b6910"
+                  }
+                ],
+                "fact": "notice.variant",
+                "outcome": "TRUE",
+                "unaccepted_assertion_ids": [],
+                "value_sha256": "8979c85ef8addf3e558d7eb7a72a931248d9ab309c7578cd8b82df093dd153b2"
+              }
+            ],
+            "group_id": "notice-title-length",
+            "instance_id": "legal-notice",
+            "precedence_edge_ids": [],
+            "selected_rule_id": null,
+            "state": "CONDITION_TRUE"
+          }
+        ],
+        "out_of_scope_count": 0,
+        "source_refs": [
+          {
+            "line_end": 2,
+            "line_start": 2,
+            "quote": "When the instance fact notice.variant equals legal_disclosure, the notice title field must contain no more than 80 NFC-normalized Unicode code points.",
+            "source_id": "contextual-title-guidance"
+          },
+          {
+            "line_end": 4,
+            "line_start": 4,
+            "quote": "The notice-context provider observes notice.variant from the notice component variant for each notice instance; only this observed provider mapping is accepted for deterministic applicability.",
+            "source_id": "contextual-title-guidance"
+          }
+        ]
+      },
+      "check": "character_limit",
+      "description": "Limit legal-disclosure notice titles to 80 Unicode code points after NFC normalization.",
+      "evidence": [],
+      "message": "All applicable fields were within the character limit.",
+      "review_evidence": [],
+      "rule_id": "notice-title-legal-limit",
+      "scope": {
+        "fields": [
+          "title"
+        ],
+        "surfaces": [
+          "notice"
+        ]
+      },
+      "source_refs": [
+        {
+          "line_end": 2,
+          "line_start": 2,
+          "quote": "When the instance fact notice.variant equals legal_disclosure, the notice title field must contain no more than 80 NFC-normalized Unicode code points.",
+          "source_id": "contextual-title-guidance"
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "rule_set": {
+    "authority_note": "Adoption, precedence, and fact-provider provenance are recorded claims; this runtime does not authenticate them. Trusted host-controlled adapters must supply facts.",
+    "canonical_sha256": "f309c97fb330ca860b63feb4bb7696bcc107692971843e40476900c0c99eaa8c",
+    "conflict_group_count": 1,
+    "decision_ref": "EXAMPLE-RULESET-ADOPTION",
+    "effect": "check result only; the calling workflow decides consequences",
+    "fact_definition_count": 1,
+    "id": "contextual-title-limits",
+    "name": "Contextual notice title limits",
+    "owner": "Content standards owner",
+    "path": "rules.json",
+    "sha256": "523f5800d0964fe739d48b8359cfa370d151facb733ee62a4566e12e6c4e45d3",
+    "status": "adopted"
+  },
+  "sources": [
+    {
+      "id": "contextual-title-guidance",
+      "path": "guidance.md",
+      "sha256": "a8a958333eabdedf1f5a4e38b9a8bcbf363c5fd703395fb2d48851831b2b93b4",
+      "status": "VERIFIED"
+    }
+  ],
+  "summary": {
+    "applicable": 1,
+    "failed": 0,
+    "not_applicable": 1,
+    "passed": 1,
+    "review": 0,
+    "status": "PASS",
+    "unresolved_applicability": 0,
+    "unresolved_evidence": 0
+  },
+  "tool": {
+    "name": "content-rules",
+    "version": "0.2.0"
+  }
+}

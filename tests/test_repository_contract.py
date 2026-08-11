@@ -8,7 +8,14 @@ import sys
 import unittest
 
 from tests.helpers import ROOT
+from content_rules import common
 from content_rules.common import load_json
+from content_rules.contextual import (
+    MAX_CONDITIONS_PER_RULE,
+    MAX_CONFLICT_GROUPS,
+    MAX_GROUP_MEMBERS,
+    MAX_INSTANCE_FACTS,
+)
 
 
 class RepositoryContractTests(unittest.TestCase):
@@ -50,6 +57,59 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 1)
         self.assertEqual(completed.stdout, (example / "receipt.fail.json").read_bytes())
 
+    def test_contextual_example_sources_and_receipts_are_fresh(self) -> None:
+        example = ROOT / "examples" / "contextual-title-limits"
+        source_bytes = (example / "guidance.md").read_bytes()
+        rules = json.loads((example / "rules.json").read_text(encoding="utf-8"))
+        candidates = json.loads((example / "candidates.json").read_text(encoding="utf-8"))
+        digest = hashlib.sha256(source_bytes).hexdigest()
+        self.assertEqual(rules["sources"][0]["sha256"], digest)
+        self.assertEqual(candidates["source"]["sha256"], digest)
+        lines = (example / "guidance.md").read_text(encoding="utf-8").splitlines()
+        references = [
+            ref
+            for rule in rules["rules"]
+            for ref in (
+                rule["source_refs"]
+                + rule.get("applies_when", {}).get("source_refs", [])
+            )
+        ] + [
+            ref
+            for group in rules["conflict_groups"]
+            for edge in group["supersession"]
+            for ref in edge["source_refs"]
+        ]
+        for ref in references:
+            source_slice = "\n".join(lines[ref["line_start"] - 1 : ref["line_end"]])
+            self.assertIn(ref["quote"], source_slice)
+
+        cases = (
+            ("artifact.pass.json", "receipt.pass.json", 0),
+            ("artifact.fail.json", "receipt.fail.json", 1),
+            ("artifact.review-missing.json", "receipt.review-missing.json", 3),
+            ("artifact.review-conflict.json", "receipt.review-conflict.json", 3),
+        )
+        for artifact_name, receipt_name, expected_exit in cases:
+            with self.subTest(artifact=artifact_name):
+                completed = subprocess.run(
+                    [
+                        sys.executable,
+                        str(ROOT / "scripts" / "run_checks.py"),
+                        "check",
+                        "--source-root",
+                        str(example),
+                        "--rules",
+                        str(example / "rules.json"),
+                        "--input",
+                        str(example / artifact_name),
+                    ],
+                    cwd=ROOT,
+                    capture_output=True,
+                    check=False,
+                )
+                self.assertEqual(completed.returncode, expected_exit)
+                self.assertEqual(completed.stdout, (example / receipt_name).read_bytes())
+
     def test_skill_is_complete_and_keeps_the_runtime_fixed(self) -> None:
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertNotIn("TODO", skill)
@@ -71,6 +131,9 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("deliberately failing fixture should exit `1`", skill)
         self.assertIn("Self-lint governed content", skill)
         self.assertIn("Run no more than five attempts", skill)
+        self.assertIn("inferred", skill)
+        self.assertIn("Never revise a contextual fact", skill)
+        self.assertIn("numeric priority", skill)
         self.assertNotIn("python scripts/run_checks.py", skill)
 
     def test_any_agent_self_lint_loop_cannot_manufacture_a_pass(self) -> None:
@@ -82,6 +145,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("On exit `2`", loop)
         self.assertIn("Run at most five attempts", loop)
         self.assertIn("Do not change the rule set", loop)
+        self.assertIn("must not change these assertions", loop)
         self.assertIn("must require a current receipt", loop)
         self.assertNotIn("blacklist", loop.casefold())
         self.assertNotIn("50", loop)
@@ -124,6 +188,35 @@ class RepositoryContractTests(unittest.TestCase):
         for unsafe in ("../guidance.md", "standards/../guidance.md", "C:/guidance.md", "https://example.com"):
             with self.subTest(unsafe=unsafe):
                 self.assertIsNone(source_pattern.search(unsafe))
+
+        rules_v2 = json.loads((ROOT / "schemas" / "rules-v2.schema.json").read_text(encoding="utf-8"))
+        artifact_v2 = json.loads((ROOT / "schemas" / "artifact-v2.schema.json").read_text(encoding="utf-8"))
+        receipt_v2 = json.loads((ROOT / "schemas" / "receipt-v2.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(rules_v2["properties"]["fact_definitions"]["maxItems"], common.MAX_FACT_DEFINITIONS)
+        self.assertEqual(rules_v2["$defs"]["applies_when"]["properties"]["all"]["maxItems"], MAX_CONDITIONS_PER_RULE)
+        self.assertEqual(rules_v2["properties"]["conflict_groups"]["maxItems"], MAX_CONFLICT_GROUPS)
+        self.assertEqual(rules_v2["$defs"]["conflict_group"]["properties"]["members"]["maxItems"], MAX_GROUP_MEMBERS)
+        self.assertEqual(artifact_v2["properties"]["facts"]["maxItems"], common.MAX_FACT_ASSERTIONS)
+        self.assertEqual(artifact_v2["$defs"]["instance"]["properties"]["facts"]["maxItems"], MAX_INSTANCE_FACTS)
+        self.assertEqual(
+            receipt_v2["$defs"]["result"]["properties"]["evidence"]["maxItems"],
+            common.MAX_RECEIPT_EVIDENCE_ITEMS_PER_RESULT,
+        )
+        self.assertEqual(
+            receipt_v2["$defs"]["result"]["properties"]["review_evidence"]["maxItems"],
+            common.MAX_RECEIPT_EVIDENCE_ITEMS_PER_RESULT,
+        )
+
+    def test_v2_public_contract_never_claims_authenticated_authority(self) -> None:
+        candidates_schema = (ROOT / "schemas" / "candidates-v2.schema.json").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        migration = (ROOT / "MIGRATION.md").read_text(encoding="utf-8")
+        formats = (ROOT / "references" / "formats.md").read_text(encoding="utf-8")
+        self.assertNotIn('"authorized"', candidates_schema)
+        self.assertIn("recorded_adopted", candidates_schema)
+        self.assertIn("not authenticated authority", readme)
+        self.assertIn("not authenticated", migration)
+        self.assertIn("CLI remains the acceptance check", formats)
 
 
 if __name__ == "__main__":

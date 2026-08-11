@@ -1,0 +1,25 @@
+{
+  "schema_version": "content-artifact/2",
+  "facts": [],
+  "instances": [
+    {
+      "id": "legal-notice",
+      "surface": "notice",
+      "fields": {
+        "title": "Legal disclosure: Read information before account setup now."
+      },
+      "facts": [
+        {
+          "id": "legal-notice-variant",
+          "fact": "notice.variant",
+          "value": "legal_disclosure",
+          "provenance": {
+            "basis": "observed",
+            "provider": "notice-context",
+            "ref": "notice/legal-notice/variant"
+          }
+        }
+      ]
+    }
+  ]
+}

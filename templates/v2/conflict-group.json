@@ -1,0 +1,23 @@
+{
+  "id": "__REPLACE_ME__",
+  "description": "__REPLACE_ME__",
+  "members": [
+    "__REPLACE_ME__",
+    "__REPLACE_ME__"
+  ],
+  "supersession": [
+    {
+      "rule_id": "__REPLACE_ME__",
+      "supersedes": "__REPLACE_ME__",
+      "decision_ref": null,
+      "source_refs": [
+        {
+          "source_id": "__REPLACE_ME__",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "__REPLACE_ME__"
+        }
+      ]
+    }
+  ]
+}

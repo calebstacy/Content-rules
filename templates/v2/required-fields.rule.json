@@ -1,0 +1,27 @@
+{
+  "id": "__REPLACE_ME__",
+  "description": "__REPLACE_ME__",
+  "check": "required_fields",
+  "scope": {
+    "surfaces": [
+      "__REPLACE_ME__"
+    ],
+    "fields": [
+      "*"
+    ]
+  },
+  "params": {
+    "fields": [
+      "__REPLACE_ME__"
+    ],
+    "require_non_empty": "__REPLACE_ME__"
+  },
+  "source_refs": [
+    {
+      "source_id": "__REPLACE_ME__",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "__REPLACE_ME__"
+    }
+  ]
+}

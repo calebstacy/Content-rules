@@ -1,0 +1,912 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:content-rules:receipt:2",
+  "title": "Context-aware content rule receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "tool",
+    "rule_set",
+    "sources",
+    "artifact",
+    "summary",
+    "precedence_evidence",
+    "resolutions",
+    "results"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "content-rule-receipt/2"
+    },
+    "tool": {
+      "$ref": "#/$defs/tool"
+    },
+    "rule_set": {
+      "$ref": "#/$defs/rule_set"
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/$defs/verified_source"
+      }
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact"
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "precedence_evidence": {
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/$defs/precedence_evidence"
+      }
+    },
+    "resolutions": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/resolution"
+      }
+    },
+    "results": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/$defs/result"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,79}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "REVIEW",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "bounded_string": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "identifier_array": {
+      "type": "array",
+      "maxItems": 200,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "string_array": {
+      "type": "array",
+      "maxItems": 200,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "tool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "const": "content-rules"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        }
+      }
+    },
+    "rule_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "status",
+        "owner",
+        "decision_ref",
+        "effect",
+        "authority_note",
+        "path",
+        "sha256",
+        "canonical_sha256",
+        "fact_definition_count",
+        "conflict_group_count"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "adopted"
+          ]
+        },
+        "owner": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effect": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "authority_note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canonical_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fact_definition_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "conflict_group_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "verified_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "sha256",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "const": "VERIFIED"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "canonical_sha256",
+        "instance_count",
+        "fact_assertion_count"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canonical_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "instance_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "fact_assertion_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "applicable",
+        "passed",
+        "failed",
+        "review",
+        "unresolved_evidence",
+        "unresolved_applicability",
+        "not_applicable"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "applicable": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "review": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "unresolved_evidence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200000
+        },
+        "unresolved_applicability": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "not_applicable": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "line_start",
+        "line_end",
+        "quote"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "line_start": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "line_end": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surfaces",
+        "fields"
+      ],
+      "properties": {
+        "surfaces": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/bounded_string"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/bounded_string"
+          }
+        }
+      }
+    },
+    "precedence_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "group_id",
+        "rule_id",
+        "supersedes",
+        "decision_ref",
+        "source_refs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "group_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "rule_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "supersedes": {
+          "$ref": "#/$defs/identifier"
+        },
+        "decision_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instance_id",
+        "group_id",
+        "status",
+        "reason",
+        "selected_rule_id",
+        "competing_rule_ids",
+        "superseded_rule_ids",
+        "decision_refs",
+        "precedence_edge_ids"
+      ],
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "group_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "status": {
+          "enum": [
+            "SELECTED",
+            "REVIEW"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "selected_rule_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "competing_rule_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "superseded_rule_ids": {
+          "type": "array",
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "decision_refs": {
+          "type": "array",
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "precedence_edge_ids": {
+          "type": "array",
+          "maxItems": 500,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "SELECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "selected_rule_id": {
+                "$ref": "#/$defs/identifier"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "selected_rule_id": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fact_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact",
+        "outcome",
+        "accepted_assertion_ids",
+        "unaccepted_assertion_ids",
+        "assertions",
+        "value_sha256"
+      ],
+      "properties": {
+        "fact": {
+          "$ref": "#/$defs/identifier"
+        },
+        "outcome": {
+          "enum": [
+            "TRUE",
+            "FALSE",
+            "UNKNOWN",
+            "CONFLICT"
+          ]
+        },
+        "accepted_assertion_ids": {
+          "$ref": "#/$defs/identifier_array"
+        },
+        "unaccepted_assertion_ids": {
+          "$ref": "#/$defs/identifier_array"
+        },
+        "assertions": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/assertion_trace"
+          }
+        },
+        "value_sha256": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "assertion_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "accepted",
+        "basis",
+        "provider",
+        "ref_sha256"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "basis": {
+          "enum": [
+            "observed",
+            "declared",
+            "derived",
+            "inferred"
+          ]
+        },
+        "provider": {
+          "$ref": "#/$defs/identifier"
+        },
+        "ref_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "applicability_instance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instance_id",
+        "state",
+        "condition",
+        "facts",
+        "group_id",
+        "competing_rule_ids",
+        "selected_rule_id",
+        "decision_refs",
+        "precedence_edge_ids"
+      ],
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state": {
+          "enum": [
+            "CONDITION_TRUE",
+            "CONDITION_FALSE",
+            "UNKNOWN_FACT",
+            "FACT_CONFLICT",
+            "RULE_CONFLICT",
+            "SUPERSEDED"
+          ]
+        },
+        "condition": {
+          "enum": [
+            "TRUE",
+            "FALSE",
+            "UNKNOWN",
+            "CONFLICT"
+          ]
+        },
+        "facts": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/fact_trace"
+          }
+        },
+        "group_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "competing_rule_ids": {
+          "$ref": "#/$defs/identifier_array"
+        },
+        "selected_rule_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision_refs": {
+          "type": "array",
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "precedence_edge_ids": {
+          "type": "array",
+          "maxItems": 500,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      }
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "out_of_scope_count",
+        "source_refs",
+        "instances"
+      ],
+      "properties": {
+        "out_of_scope_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "source_refs": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "instances": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/applicability_instance"
+          }
+        }
+      }
+    },
+    "check_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instance_id",
+        "surface"
+      ],
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "surface": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "term": {
+          "$ref": "#/$defs/bounded_string"
+        },
+        "occurrences": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "occurrences_capped": {
+          "type": "boolean"
+        },
+        "match": {
+          "enum": [
+            "whole",
+            "substring"
+          ]
+        },
+        "measured": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000
+        },
+        "maximum": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100000
+        },
+        "unit": {
+          "const": "unicode_code_points_after_nfc"
+        },
+        "deprecated": {
+          "$ref": "#/$defs/bounded_string"
+        },
+        "preferred": {
+          "$ref": "#/$defs/bounded_string"
+        },
+        "missing_fields": {
+          "$ref": "#/$defs/string_array"
+        },
+        "empty_fields": {
+          "$ref": "#/$defs/string_array"
+        }
+      }
+    },
+    "review_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instance_id",
+        "surface",
+        "reason"
+      ],
+      "properties": {
+        "instance_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "surface": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "non_string_fields": {
+          "$ref": "#/$defs/string_array"
+        },
+        "fact_ids": {
+          "$ref": "#/$defs/identifier_array"
+        },
+        "assertion_ids": {
+          "$ref": "#/$defs/identifier_array"
+        },
+        "group_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "competing_rule_ids": {
+          "$ref": "#/$defs/identifier_array"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "description",
+        "check",
+        "scope",
+        "source_refs",
+        "status",
+        "message",
+        "applicability",
+        "evidence",
+        "review_evidence"
+      ],
+      "properties": {
+        "rule_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "check": {
+          "enum": [
+            "banned_terms",
+            "character_limit",
+            "required_terminology",
+            "required_fields"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "applicability": {
+          "$ref": "#/$defs/applicability"
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/check_evidence"
+          }
+        },
+        "review_evidence": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/$defs/review_evidence"
+          }
+        }
+      }
+    }
+  }
+}
