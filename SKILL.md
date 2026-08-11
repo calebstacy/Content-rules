@@ -1,6 +1,6 @@
 ---
 name: content-rules
-description: Convert content standards, prompt.md files, style-guide excerpts, and rule lists into proposed JSON configurations for this repository's fixed Python checkers, then validate them against pass and fail fixtures. Use when a user asks to ingest content guidance, make exact content rules executable, move deterministic rules out of Markdown, or configure banned terms, character limits, preferred terminology, or required fields. Keep tone, meaning, quality, policy, and other judgment-heavy guidance in REVIEW. Never modify the shipped Python during ingestion or authorize adoption, waivers, enforcement, or blocking consequences.
+description: Convert content standards, prompt.md files, style-guide excerpts, and rule lists into proposed JSON configurations for this repository's fixed Python checkers, validate them against pass and fail fixtures, and self-lint governed content through a check-and-revise loop. Use when a user asks to ingest content guidance, make exact content rules executable, move deterministic rules out of Markdown, configure banned terms, character limits, preferred terminology, or required fields, or check an agent's generated content before delivery. Keep tone, meaning, quality, policy, and other judgment-heavy guidance in REVIEW. Never modify the shipped Python during ingestion or authorize adoption, waivers, enforcement, or blocking consequences.
 ---
 
 # Content Rules
@@ -134,6 +134,21 @@ Report:
 - Files awaiting human review
 
 A passing fixture proves only that the configured checker behaved as specified on that fixture.
+
+## Self-lint governed content
+
+When creating or revising content under a supplied rule set, do not return the first draft. Follow the portable loop in [`agents/self-lint.md`](agents/self-lint.md):
+
+1. Put the current draft into the supplied or approved `content-artifact/1` mapping.
+2. Run the checker and write a receipt.
+3. On exit `1`, revise only the content fields identified by exact failures, then run the checker again.
+4. On exit `0`, return the content with the passing receipt.
+5. On exit `3`, stop and return the content, receipt, and every item requiring review. Never call it a pass.
+6. On exit `2`, stop and report the invalid rules, source, artifact, or invocation. Do not attempt to write around the error.
+
+Run no more than five attempts. If exact failures remain, stop with the last receipt and report them. Never edit the rules, source evidence, checker code, field mapping, or receipt to make generated content pass.
+
+These instructions make the loop portable across agents that can run a local command. A required host workflow, hook, or CI job makes the check mandatory.
 
 ## Preserve human authority
 
