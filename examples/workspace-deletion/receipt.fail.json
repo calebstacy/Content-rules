@@ -176,7 +176,7 @@
     "unresolved_evidence": 0
   },
   "tool": {
-    "name": "content-rule-starters",
+    "name": "content-rules",
     "version": "0.1.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:content-rule-starters:receipt:1",
+  "$id": "urn:content-rules:receipt:1",
   "title": "Content rule receipt",
   "type": "object",
   "additionalProperties": false,
@@ -26,7 +26,7 @@
       ],
       "properties": {
         "name": {
-          "const": "content-rule-starters"
+          "const": "content-rules"
         },
         "version": {
           "type": "string"

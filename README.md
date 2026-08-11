@@ -1,30 +1,43 @@
-# Content Rule Starters
+# Content Rules
 
-Move the countable parts of your content guidance out of prose and into tested checks.
+[![Tests](https://github.com/calebstacy/Content-rules/actions/workflows/tests.yml/badge.svg)](https://github.com/calebstacy/Content-rules/actions/workflows/tests.yml)
 
-Some guidance asks for judgment:
+Turn the rules in your style guide into checks your agents can actually run.
 
-> Make this feel calm and helpful.
+Content Rules helps you stop catching the same exact content mistakes by hand. Give the included skill your standards and a sample of your product content. It helps your agent identify the guidance with exact answers, prepare the rules, and test them against examples that should pass and fail.
 
-Some guidance describes a check:
+The current kit can check:
 
-> Notification titles can contain no more than 50 Unicode code points after NFC normalization.
+- words and phrases you have banned;
+- character limits for specific fields;
+- deprecated terms and their approved replacements;
+- content fields that must be present.
 
-Those are different jobs.
+The checks run separately from the agent that wrote the content. A model does not get to decide that its own answer followed the rule. The result comes back with a receipt showing which rules ran, what passed, what failed, and what still needs a person.
 
-This repository gives your agent four tested Python checkers for the second kind. The agent reads your standards and proposes a small JSON rule file. You review the proposal. The Python already in this repository does the counting and matching.
+You do not need to write Python. The Python is already here. Your team supplies the standards, reviews the proposed rules, and decides where those rules apply.
 
-Anything the extraction cannot honestly make exact should stay in `REVIEW`. The runner can verify the checks it receives; it cannot prove that an agent found every instruction in the source. A person still reviews the candidate inventory for omissions and bad mappings.
+## What you get
 
-You do not need to write Python. You still decide whether a rule is legitimate, where it applies, and what a failure is allowed to do.
+- **A skill for your agent:** it walks through your guidance, proposes runnable rules, and prepares test examples.
+- **Four working content checks:** banned terms, character limits, preferred terminology, and required fields.
+- **A repeatable result:** the same content and rule produce the same answer every time.
+- **A source trail:** every proposed rule points back to the guidance it came from.
+- **A review queue:** tone, meaning, usefulness, and other genuine design decisions stay visible for people.
+- **A path to expand:** new kinds of exact content rules can become new checkers without turning the style guide into a larger prompt.
 
-Deterministic means the same checker returns the same result for the same defined input. It does not mean the rule is correct, useful, or authorized.
+Content Rules does not replace your standards. It gives the enforceable parts somewhere to run.
 
 ## Start here
 
-1. Download or clone this whole repository. `SKILL.md` depends on the sibling scripts, templates, and references; it is not a standalone file.
-2. Open a terminal in the downloaded `content-rule-starters` directory.
-3. Confirm that Python 3.10 or newer is available:
+Clone the repository and open a terminal in it:
+
+```bash
+git clone https://github.com/calebstacy/Content-rules.git
+cd Content-rules
+```
+
+Confirm that Python 3.10 or newer is available:
 
 ```text
 python --version
@@ -175,7 +188,7 @@ An agent can propose a configuration. Tests can prove the checker behaves as spe
 ## File tree
 
 ```text
-content-rule-starters/
+content-rules/
 ├── README.md
 ├── SKILL.md
 ├── schemas/

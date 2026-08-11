@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:content-rule-starters:candidates:1",
+  "$id": "urn:content-rules:candidates:1",
   "title": "Content rule candidate inventory",
   "type": "object",
   "additionalProperties": false,

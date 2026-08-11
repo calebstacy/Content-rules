@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:content-rule-starters:rules:1",
+  "$id": "urn:content-rules:rules:1",
   "title": "Content rule set",
   "type": "object",
   "additionalProperties": false,

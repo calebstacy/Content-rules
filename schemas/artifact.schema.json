@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:content-rule-starters:artifact:1",
+  "$id": "urn:content-rules:artifact:1",
   "title": "Typed content artifact",
   "type": "object",
   "additionalProperties": false,
